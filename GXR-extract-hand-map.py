@@ -1,9 +1,9 @@
-"""ANTR hand map: collect every hand-joint layer captured for a converted Quest game on Galaxy XR into one JSON.
+"""GXR hand map: collect every hand-joint layer captured for a converted Quest game on Galaxy XR into one JSON.
 
-Usage: python -I ANTR-extract-hand-map.py HAND_LINES [--meta OVRSkeletonData.cs] [--out data.json]
+Usage: python -I GXR-extract-hand-map.py HAND_LINES [--meta OVRSkeletonData.cs] [--out data.json]
   HAND_LINES  logcat extract with the "OverportGXR: HAND" lines of a GXR_HAND_DIAGNOSTICS adapter build
   --meta      OVRSkeletonData.cs from the Oculus Integration (Quest reference rest pose); omit to skip the meta layer
-  --out       output path (default: ANTR-hand-map-data.json next to this script)
+  --out       output path (default: GXR-hand-map-data.json next to this script)
 
 Layers (per side, 0 = left, 1 = right):
   live     - XR_EXT_hand_tracking joints logged by the diagnostics adapter, world space,
@@ -163,10 +163,10 @@ def parse_meta(path):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Build the ANTR hand map data JSON from a HAND logcat extract.")
+    ap = argparse.ArgumentParser(description="Build the GXR hand map data JSON from a HAND logcat extract.")
     ap.add_argument("hand_lines", help="logcat extract with the OverportGXR: HAND lines")
     ap.add_argument("--meta", help="OVRSkeletonData.cs from the Oculus Integration (optional)")
-    ap.add_argument("--out", default=os.path.join(HERE, "ANTR-hand-map-data.json"), help="output JSON path")
+    ap.add_argument("--out", default=os.path.join(HERE, "GXR-hand-map-data.json"), help="output JSON path")
     args = ap.parse_args()
     samples, skeleton, bind = parse_diag(args.hand_lines)
     meta = parse_meta(args.meta) if args.meta else {}

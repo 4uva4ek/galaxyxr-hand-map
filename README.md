@@ -1,4 +1,4 @@
-# ANTR hand map
+# GXR hand map
 
 Interactive map of the hand joints that a converted Quest game sees on **Samsung Galaxy XR**.
 It overlays, in one 3D view, the live `XR_EXT_hand_tracking` joints of the Galaxy XR runtime,
@@ -16,14 +16,15 @@ logcat capture. Maintained by **4uva4ek**.
 
 | File | Purpose |
 | --- | --- |
-| `ANTR-hand-map.html` | The map with the bundled data. Open it in a browser; nothing else is needed. |
-| `ANTR-hand-map.template.html` | The page without data; `__DATA__` is replaced by the JSON. |
-| `ANTR-hand-map-data.json` | Joint layers extracted from `samples/hand-diag5-lines.txt` and `OVRSkeletonData.cs`. |
-| `ANTR-extract-hand-map.py` | Builds the data JSON from a `HAND` logcat extract (and optionally the Meta rest pose). |
-| `ANTR-build-hand-map.py` | Inlines the JSON into the template. |
-| `ANTR-update-edited-table.py` | Writes an exported edit JSON into `kEditedBind` in the adapter source. |
+| `GXR-hand-map.html` | The map with the bundled data. Open it in a browser; nothing else is needed. |
+| `GXR-hand-map.template.html` | The page without data; `__DATA__` is replaced by the JSON. |
+| `GXR-hand-map-data.json` | Joint layers extracted from `samples/hand-diag5-lines.txt` and `OVRSkeletonData.cs`. |
+| `GXR-extract-hand-map.py` | Builds the data JSON from a `HAND` logcat extract (and optionally the Meta rest pose). |
+| `GXR-build-hand-map.py` | Inlines the JSON into the template. |
+| `GXR-update-edited-table.py` | Writes an exported edit JSON into `kEditedBind` in the adapter source. |
 | `samples/hand-diag5-lines.txt` | Reference capture: Job Simulator 1.4.0.6515 on SM-I610 (I610UEU2AZF3), 2026-10-14. |
-| `samples/hand-edits-left-20261014.json` | The export that became the adapter's built-in `handbind=edited` table. |
+| `samples/hand-edits-left-reference.json` | Reference export: the current built-in `handbind=edited` table of the adapter. |
+| `samples/hand-edits-left-20261014.json` | Earlier export, kept for comparison. |
 
 ## 1. Where the logs come from
 
@@ -113,30 +114,30 @@ The `meta` layer comes from `OVRSkeletonData.cs` of the Oculus Integration for U
 (`Assets/Oculus/Interaction/Runtime/Scripts/Input/OVRIntegration/OVRSkeletonData.cs` in any
 Unity project that ships the Meta XR Interaction SDK). It is Meta code and is not included here;
 pass your own copy with `--meta`. Without it the map simply has no `meta` layer. The bundled
-`ANTR-hand-map-data.json` already contains the derived rest pose.
+`GXR-hand-map-data.json` already contains the derived rest pose.
 
 ## 2. Build the map
 
 ```bash
-python -I ANTR-extract-hand-map.py hand-lines.txt --meta OVRSkeletonData.cs
-python -I ANTR-build-hand-map.py
+python -I GXR-extract-hand-map.py hand-lines.txt --meta OVRSkeletonData.cs
+python -I GXR-build-hand-map.py
 ```
 
-The first command writes `ANTR-hand-map-data.json` next to the scripts (`--out` changes that)
+The first command writes `GXR-hand-map-data.json` next to the scripts (`--out` changes that)
 and prints how many live samples and bones each side has. The second inlines it into
-`ANTR-hand-map.html`. Both scripts take explicit paths:
-`ANTR-build-hand-map.py [data.json] [out.html]`.
+`GXR-hand-map.html`. Both scripts take explicit paths:
+`GXR-build-hand-map.py [data.json] [out.html]`.
 
 To rebuild the bundled map from the reference capture:
 
 ```bash
-python -I ANTR-extract-hand-map.py samples/hand-diag5-lines.txt --meta /path/to/OVRSkeletonData.cs
-python -I ANTR-build-hand-map.py
+python -I GXR-extract-hand-map.py samples/hand-diag5-lines.txt --meta /path/to/OVRSkeletonData.cs
+python -I GXR-build-hand-map.py
 ```
 
 ## 3. Using the map
 
-Open `ANTR-hand-map.html`. Everything is drawn in the **OpenXR wrist frame** of the selected
+Open `GXR-hand-map.html`. Everything is drawn in the **OpenXR wrist frame** of the selected
 hand: the wrist at the origin, **−Z toward the fingers**, **+Y out of the back of the hand**,
 +X toward the thumb on the left hand. The 1 cm grid lies in the plane of the current view.
 
@@ -210,7 +211,7 @@ rebuilds every orientation from the positions and the +Y roll of each row. A gam
 2. Write the table:
 
    ```bash
-   python -I ANTR-update-edited-table.py export.json /path/to/overport-galaxyxr/native/galaxyxr/hand_tracking.inc
+   python -I GXR-update-edited-table.py export.json /path/to/overport-galaxyxr/native/galaxyxr/hand_tracking.inc
    ```
 
    Only the 26 rows of the table are replaced; running it twice is a no-op.
@@ -226,11 +227,11 @@ rebuilds every orientation from the positions and the +Y roll of each row. A gam
    the result in the map, convert with the diagnostics adapter instead and capture again
    (section 1): the new `bind` and `ovrp` layers show what the game now receives.
 
-`samples/hand-edits-left-20261014.json` is the export that produced the current built-in table.
+`samples/hand-edits-left-reference.json` is the reference export that matches the current built-in table; `samples/hand-edits-left-20261014.json` is an earlier version.
 
 ## 5. Data file reference
 
-`ANTR-hand-map-data.json`: `source` (input file names), `xrNames`/`xrParents` (26 OpenXR joints
+`GXR-hand-map-data.json`: `source` (input file names), `xrNames`/`xrParents` (26 OpenXR joints
 and their parents), `ovrNames` (24 OVR bones), `ovrToXr` (OVR bone index to OpenXR joint), and
 `sides["0"|"1"]` with:
 

@@ -190,8 +190,8 @@ function rotateJoint(points, j, axisIdx, deg, carry){ const pt=points[j]; if(!pt
 const state = { side:0, sample:0, frame:'aligned', view:'back', yaw:0, pitch:0, zoom:1, labels:true, lengths:false, grid:true, axes:'', edit:false, editSrc:'bind', sel:-1, hover:null, carry:true };
 const layerOn = Object.fromEntries(LAYERS.map(l=>[l.key,l.on]));
 const edits = {0:null,1:null}; // per side: {src, points:[{name,p,p0,parent}]}
-try { const s = JSON.parse(localStorage.getItem('antr-hand-map-edits')||'null'); if(s && s[0]!==undefined){ edits[0]=s[0]; edits[1]=s[1]; } } catch(e){}
-function saveEdits(){ try { localStorage.setItem('antr-hand-map-edits', JSON.stringify(edits)); } catch(e){} }
+try { const s = JSON.parse(localStorage.getItem('gxr-hand-map-edits')||'null'); if(s && s[0]!==undefined){ edits[0]=s[0]; edits[1]=s[1]; } } catch(e){}
+function saveEdits(){ try { localStorage.setItem('gxr-hand-map-edits', JSON.stringify(edits)); } catch(e){} }
 
 // ---- layer point sets in the wrist frame: [{name, p:[m], q, parent, label}]
 function sideData(){ return DATA.sides[String(state.side)]; }

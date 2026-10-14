@@ -1,5 +1,5 @@
 {
- "source": "exported from the ANTR hand map on 2026-10-14 (left hand, bind layer tuned against the live joints and the Meta rest pose); this table is built into the overport-galaxyxr adapter as kEditedBind (handbind=edited)",
+ "source": "exported from the GXR hand map on 2026-10-14 (left hand, bind layer tuned against the live joints and the Meta rest pose); this table is built into the overport-galaxyxr adapter as kEditedBind (handbind=edited)",
  "frame": "OpenXR wrist frame of the left hand: wrist at origin, -Z toward the fingers, +Y back of hand; p in mm, q xyzw",
  "joints": [
   {"name": "palm", "p_mm": [0, 0, 0], "q_xyzw": [0, 0, 0, 1]},

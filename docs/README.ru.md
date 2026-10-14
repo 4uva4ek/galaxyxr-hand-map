@@ -1,4 +1,4 @@
-# Карта рук ANTR
+# Карта рук GXR
 
 Интерактивная карта суставов кисти, которые видит сконвертированная Quest-игра на
 **Samsung Galaxy XR**. В одном 3D-виде совмещены живые суставы `XR_EXT_hand_tracking` рантайма
@@ -14,14 +14,15 @@ Galaxy XR, bind-поза, которую адаптер [overport-galaxyxr](http
 
 | Файл | Назначение |
 | --- | --- |
-| `ANTR-hand-map.html` | Карта со встроенными данными. Открыть в браузере, больше ничего не нужно. |
-| `ANTR-hand-map.template.html` | Страница без данных; `__DATA__` заменяется на JSON. |
-| `ANTR-hand-map-data.json` | Слои суставов из `samples/hand-diag5-lines.txt` и `OVRSkeletonData.cs`. |
-| `ANTR-extract-hand-map.py` | Строит JSON из выжимки `HAND`-строк logcat (и, по желанию, позы покоя Meta). |
-| `ANTR-build-hand-map.py` | Встраивает JSON в шаблон. |
-| `ANTR-update-edited-table.py` | Записывает выгруженные правки в таблицу `kEditedBind` в исходниках адаптера. |
+| `GXR-hand-map.html` | Карта со встроенными данными. Открыть в браузере, больше ничего не нужно. |
+| `GXR-hand-map.template.html` | Страница без данных; `__DATA__` заменяется на JSON. |
+| `GXR-hand-map-data.json` | Слои суставов из `samples/hand-diag5-lines.txt` и `OVRSkeletonData.cs`. |
+| `GXR-extract-hand-map.py` | Строит JSON из выжимки `HAND`-строк logcat (и, по желанию, позы покоя Meta). |
+| `GXR-build-hand-map.py` | Встраивает JSON в шаблон. |
+| `GXR-update-edited-table.py` | Записывает выгруженные правки в таблицу `kEditedBind` в исходниках адаптера. |
 | `samples/hand-diag5-lines.txt` | Эталонный захват: Job Simulator 1.4.0.6515 на SM-I610 (I610UEU2AZF3), 2026-10-14. |
-| `samples/hand-edits-left-20261014.json` | Выгрузка, из которой собрана встроенная таблица `handbind=edited`. |
+| `samples/hand-edits-left-reference.json` | Эталонная выгрузка: текущая встроенная таблица `handbind=edited` адаптера. |
+| `samples/hand-edits-left-20261014.json` | Более ранняя выгрузка, оставлена для сравнения. |
 
 ## 1. Откуда брать логи
 
@@ -110,30 +111,30 @@ Select-String -Path overport-logcat.txt -Pattern "OverportGXR: HAND" | ForEach-O
 (`Assets/Oculus/Interaction/Runtime/Scripts/Input/OVRIntegration/OVRSkeletonData.cs` в любом
 Unity-проекте с Meta XR Interaction SDK). Это код Meta, в репозиторий он не включён; передайте
 свою копию через `--meta`. Без него слоя `meta` просто не будет. Встроенный
-`ANTR-hand-map-data.json` уже содержит производную позу покоя.
+`GXR-hand-map-data.json` уже содержит производную позу покоя.
 
 ## 2. Собрать карту
 
 ```bash
-python -I ANTR-extract-hand-map.py hand-lines.txt --meta OVRSkeletonData.cs
-python -I ANTR-build-hand-map.py
+python -I GXR-extract-hand-map.py hand-lines.txt --meta OVRSkeletonData.cs
+python -I GXR-build-hand-map.py
 ```
 
-Первая команда пишет `ANTR-hand-map-data.json` рядом со скриптами (`--out` меняет путь) и
+Первая команда пишет `GXR-hand-map-data.json` рядом со скриптами (`--out` меняет путь) и
 печатает, сколько живых образцов и костей у каждой стороны. Вторая встраивает его в
-`ANTR-hand-map.html`. Оба скрипта принимают явные пути:
-`ANTR-build-hand-map.py [data.json] [out.html]`.
+`GXR-hand-map.html`. Оба скрипта принимают явные пути:
+`GXR-build-hand-map.py [data.json] [out.html]`.
 
 Пересобрать встроенную карту из эталонного захвата:
 
 ```bash
-python -I ANTR-extract-hand-map.py samples/hand-diag5-lines.txt --meta /путь/к/OVRSkeletonData.cs
-python -I ANTR-build-hand-map.py
+python -I GXR-extract-hand-map.py samples/hand-diag5-lines.txt --meta /путь/к/OVRSkeletonData.cs
+python -I GXR-build-hand-map.py
 ```
 
 ## 3. Как пользоваться картой
 
-Откройте `ANTR-hand-map.html`. Всё рисуется в **системе координат запястья OpenXR** выбранной
+Откройте `GXR-hand-map.html`. Всё рисуется в **системе координат запястья OpenXR** выбранной
 руки: запястье в начале координат, **−Z к пальцам**, **+Y из тыльной стороны кисти**, +X к большому
 пальцу на левой руке. Сетка 1 см лежит в плоскости текущего вида.
 
@@ -206,7 +207,7 @@ python -I ANTR-build-hand-map.py
 2. Запишите таблицу:
 
    ```bash
-   python -I ANTR-update-edited-table.py export.json /путь/к/overport-galaxyxr/native/galaxyxr/hand_tracking.inc
+   python -I GXR-update-edited-table.py export.json /путь/к/overport-galaxyxr/native/galaxyxr/hand_tracking.inc
    ```
 
    Заменяются только 26 строк таблицы; повторный запуск ничего не меняет.
@@ -222,11 +223,11 @@ python -I ANTR-build-hand-map.py
    результат на карте, сконвертируйте диагностическим адаптером и снимите лог заново (раздел 1):
    новые слои `bind` и `ovrp` покажут, что теперь получает игра.
 
-`samples/hand-edits-left-20261014.json` — выгрузка, из которой собрана текущая встроенная таблица.
+`samples/hand-edits-left-reference.json` — эталонная выгрузка, совпадающая с текущей встроенной таблицей; `samples/hand-edits-left-20261014.json` — более ранняя версия.
 
 ## 5. Формат файла данных
 
-`ANTR-hand-map-data.json`: `source` (имена входных файлов), `xrNames`/`xrParents` (26 суставов
+`GXR-hand-map-data.json`: `source` (имена входных файлов), `xrNames`/`xrParents` (26 суставов
 OpenXR и их родители), `ovrNames` (24 кости OVR), `ovrToXr` (индекс кости OVR → сустав OpenXR)
 и `sides["0"|"1"]` с полями:
 

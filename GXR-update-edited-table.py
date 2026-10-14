@@ -1,6 +1,6 @@
-"""ANTR hand map: write an exported edit JSON into the kEditedBind table of the overport-galaxyxr adapter.
+"""GXR hand map: write an exported edit JSON into the kEditedBind table of the overport-galaxyxr adapter.
 
-Usage: python -I ANTR-update-edited-table.py EXPORT_JSON HAND_TRACKING_INC
+Usage: python -I GXR-update-edited-table.py EXPORT_JSON HAND_TRACKING_INC
   EXPORT_JSON        the JSON produced by the "Собрать JSON правок" (export) button of the hand map
   HAND_TRACKING_INC  path to native/galaxyxr/hand_tracking.inc in the overport-galaxyxr checkout
 
